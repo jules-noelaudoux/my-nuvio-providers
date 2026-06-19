@@ -1,3 +1,4 @@
+import './polyfill.js';
 import { gcm } from '@noble/ciphers/aes.js';
 
 const CONFIG = {
