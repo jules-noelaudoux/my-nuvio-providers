@@ -1,5 +1,4 @@
-import './polyfill.js';
-import { gcm } from '@noble/ciphers/aes.js';
+const forge = require('node-forge');
 
 const CONFIG = {
     KEY_HEX: "a8f2a1b5e9c470814f6b2c3a5d8e7f9c1a2b3c4d5e3f7a8b8cad1e2d0a4d5c5d",
@@ -19,60 +18,6 @@ const SERVERS = [
     { name: "Dark", path: "net", apis: ["https://uwu.eat-peach.sbs"] }
 ];
 
-const lookup = new Uint8Array(256);
-const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
-for (let i = 0; i < chars.length; i++) {
-    lookup[chars.charCodeAt(i)] = i;
-}
-
-function decodeBase64(str) {
-    let b64 = str.replace(/-/g, "+").replace(/_/g, "/");
-    while (b64.length % 4) {
-        b64 += "=";
-    }
-    const len = b64.length;
-    let bufferLength = len * 0.75;
-    if (b64[len - 1] === '=') {
-        bufferLength--;
-        if (b64[len - 2] === '=') {
-            bufferLength--;
-        }
-    }
-    const bytes = new Uint8Array(bufferLength);
-    let p = 0;
-    for (let i = 0; i < len; i += 4) {
-        const encoded1 = lookup[b64.charCodeAt(i)];
-        const encoded2 = lookup[b64.charCodeAt(i + 1)];
-        const encoded3 = lookup[b64.charCodeAt(i + 2)];
-        const encoded4 = lookup[b64.charCodeAt(i + 3)];
-        
-        bytes[p++] = (encoded1 << 2) | (encoded2 >> 4);
-        if (p < bufferLength) bytes[p++] = ((encoded2 & 15) << 4) | (encoded3 >> 2);
-        if (p < bufferLength) bytes[p++] = ((encoded3 & 3) << 6) | (encoded4 & 63);
-    }
-    return bytes;
-}
-
-function hexToBytes(hex) {
-    const bytes = new Uint8Array(hex.length / 2);
-    for (let i = 0; i < hex.length; i += 2) {
-        bytes[i / 2] = parseInt(hex.substring(i, i + 2), 16);
-    }
-    return bytes;
-}
-
-function bytesToString(bytes) {
-    let str = '';
-    for (let i = 0; i < bytes.length; i++) {
-        str += String.fromCharCode(bytes[i]);
-    }
-    try {
-        return decodeURIComponent(escape(str));
-    } catch (e) {
-        return str;
-    }
-}
-
 function decrypt(encryptedData, keyHex) {
     try {
         const parts = encryptedData.split('.');
@@ -80,18 +25,37 @@ function decrypt(encryptedData, keyHex) {
             throw new Error("Invalid encrypted data format");
         }
         
-        const iv = decodeBase64(parts[0]);
-        const ciphertext = decodeBase64(parts[1]);
-        const tag = decodeBase64(parts[2]);
-        const key = hexToBytes(keyHex);
+        let b64Iv = parts[0].replace(/-/g, '+').replace(/_/g, '/');
+        let b64Cipher = parts[1].replace(/-/g, '+').replace(/_/g, '/');
+        let b64Tag = parts[2].replace(/-/g, '+').replace(/_/g, '/');
         
-        const fullCiphertext = new Uint8Array(ciphertext.length + tag.length);
-        fullCiphertext.set(ciphertext, 0);
-        fullCiphertext.set(tag, ciphertext.length);
+        while (b64Iv.length % 4) b64Iv += '=';
+        while (b64Cipher.length % 4) b64Cipher += '=';
+        while (b64Tag.length % 4) b64Tag += '=';
         
-        const aes = gcm(key, iv);
-        const decryptedBytes = aes.decrypt(fullCiphertext);
-        return JSON.parse(bytesToString(decryptedBytes));
+        const iv = forge.util.decode64(b64Iv);
+        const ciphertext = forge.util.decode64(b64Cipher);
+        const tag = forge.util.decode64(b64Tag);
+        const key = forge.util.hexToBytes(keyHex);
+        
+        const decipher = forge.cipher.createDecipher('AES-GCM', key);
+        decipher.start({
+            iv: iv,
+            tagLength: tag.length * 8,
+            tag: forge.util.createBuffer(tag)
+        });
+        decipher.update(forge.util.createBuffer(ciphertext));
+        const pass = decipher.finish();
+        
+        if (pass) {
+            const decryptedString = decipher.output.toString('utf8');
+            try {
+                return JSON.parse(decodeURIComponent(escape(decryptedString)));
+            } catch(e) {
+                return JSON.parse(decryptedString);
+            }
+        }
+        return null;
     } catch (e) {
         console.log('[Peachify] Decryption failed: ' + e.message);
         return null;
