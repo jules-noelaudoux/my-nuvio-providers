@@ -34,7 +34,8 @@ providers.forEach(providerName => {
                 entryPoints: [entryPoint],
                 outfile: outputPath,
                 bundle: false,
-                minify: true,
+                minifyWhitespace: true,
+                minifySyntax: true,
                 format: 'cjs',
             });
             
@@ -45,7 +46,7 @@ providers.forEach(providerName => {
                 description: `Custom scraper for ${providerName}`,
                 version: "1.0.0",
                 author: "Custom",
-                supportedTypes: ["movie", "tv", "anime"],
+                supportedTypes: ["movie", "tv"],
                 filename: outputFileName,
                 enabled: true,
                 formats: ["mp4", "m3u8"],
