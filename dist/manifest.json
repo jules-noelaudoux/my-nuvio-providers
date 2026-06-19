@@ -1,0 +1,15 @@
+{
+  "id": "com.nuvio.custom.bundle",
+  "name": "My Custom Providers",
+  "version": "1.0.0",
+  "description": "An automated bundle of custom Nuvio scrapers.",
+  "types": [
+    "movie",
+    "series",
+    "tv"
+  ],
+  "catalogs": [],
+  "providers": [
+    "gallic.js"
+  ]
+}
