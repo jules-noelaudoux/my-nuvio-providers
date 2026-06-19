@@ -22,10 +22,16 @@ function getStreams(tmdbId, mediaType, season, episode) {
                 uiTitle = `${CONFIG.PROVIDER_NAME}\nAuto 1080p (HLS)`;
                 bingeId = `gallic-movie-${tmdbId}`;
             } 
-            else if (mediaType === 'series' || mediaType === 'tv') {
-                streamPath = `/tv/${tmdbId}/${season}/${episode}/${CONFIG.TOKEN}/master.m3u8`;
-                uiTitle = `${CONFIG.PROVIDER_NAME}\nS${season} E${episode} - Auto (HLS)`;
-                bingeId = `gallic-tv-${tmdbId}-${CONFIG.TOKEN}`; // Perfect binge-group alignment
+            else if (mediaType === 'series' || mediaType === 'tv' || mediaType === 'anime') {
+                if (mediaType === 'anime' && (season === undefined || episode === undefined || season === null || episode === null)) {
+                    streamPath = `/movie/${tmdbId}/${CONFIG.TOKEN}/master.m3u8`;
+                    uiTitle = `${CONFIG.PROVIDER_NAME}\nAuto 1080p (HLS)`;
+                    bingeId = `gallic-movie-${tmdbId}`;
+                } else {
+                    streamPath = `/tv/${tmdbId}/${season}/${episode}/${CONFIG.TOKEN}/master.m3u8`;
+                    uiTitle = `${CONFIG.PROVIDER_NAME}\nS${season} E${episode} - Auto (HLS)`;
+                    bingeId = `gallic-tv-${tmdbId}-${CONFIG.TOKEN}`; // Perfect binge-group alignment
+                }
             } 
             else {
                 return resolve([]); // Unsupported format

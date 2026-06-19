@@ -10,7 +10,8 @@
       "author": "Custom",
       "supportedTypes": [
         "movie",
-        "tv"
+        "tv",
+        "anime"
       ],
       "filename": "gallic.js",
       "enabled": true,

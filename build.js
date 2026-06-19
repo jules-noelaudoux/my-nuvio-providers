@@ -45,7 +45,7 @@ providers.forEach(providerName => {
                 description: `Custom scraper for ${providerName}`,
                 version: "1.0.0",
                 author: "Custom",
-                supportedTypes: ["movie", "tv"],
+                supportedTypes: ["movie", "tv", "anime"],
                 filename: outputFileName,
                 enabled: true,
                 formats: ["mp4", "m3u8"],
