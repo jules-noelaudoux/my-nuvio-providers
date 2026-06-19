@@ -38,6 +38,7 @@ providers.forEach(providerName => {
                 minifyWhitespace: true,
                 minifySyntax: true,
                 format: 'cjs',
+                target: 'es6',
             });
             
             console.log(`✅ Compiled: ${providerName}`);
