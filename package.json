@@ -11,5 +11,8 @@
   "license": "GPL-3.0-or-later",
   "devDependencies": {
     "esbuild": "^0.28.1"
+  },
+  "dependencies": {
+    "@noble/ciphers": "^2.2.0"
   }
 }

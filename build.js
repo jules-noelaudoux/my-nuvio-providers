@@ -33,7 +33,8 @@ providers.forEach(providerName => {
             esbuild.buildSync({
                 entryPoints: [entryPoint],
                 outfile: outputPath,
-                bundle: false,
+                bundle: true,
+                external: ['cheerio', 'crypto-js'],
                 minifyWhitespace: true,
                 minifySyntax: true,
                 format: 'cjs',

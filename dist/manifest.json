@@ -23,6 +23,28 @@
         "en",
         "fr"
       ]
+    },
+    {
+      "id": "peachify",
+      "name": "Peachify",
+      "description": "Custom scraper for Peachify",
+      "version": "1.0.0",
+      "author": "jules noel-audoux",
+      "supportedTypes": [
+        "movie",
+        "tv"
+      ],
+      "filename": "peachify.js",
+      "enabled": true,
+      "formats": [
+        "mp4",
+        "m3u8"
+      ],
+      "logo": "https://www.google.com/s2/favicons?domain=google.com&sz=128",
+      "contentLanguage": [
+        "en",
+        "fr"
+      ]
     }
   ]
 }
