@@ -7,7 +7,7 @@
       "name": "Gallic",
       "description": "Custom scraper for Gallic",
       "version": "1.0.0",
-      "author": "Custom",
+      "author": "jules noel-audoux",
       "supportedTypes": [
         "movie",
         "tv"
@@ -20,7 +20,8 @@
       ],
       "logo": "https://www.google.com/s2/favicons?domain=google.com&sz=128",
       "contentLanguage": [
-        "en"
+        "en",
+        "fr"
       ]
     }
   ]
