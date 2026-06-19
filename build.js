@@ -29,7 +29,7 @@ providers.forEach(providerName => {
 
     if (fs.existsSync(entryPoint)) {
         try {
-            // Minify and bundle into CommonJS format for Nuvio's Hermes engine
+            // Bundle into a sandbox-friendly script structure compatible with Nuvio
             esbuild.buildSync({
                 entryPoints: [entryPoint],
                 outfile: outputPath,
@@ -37,8 +37,13 @@ providers.forEach(providerName => {
                 external: ['cheerio', 'crypto-js'],
                 minifyWhitespace: true,
                 minifySyntax: true,
-                format: 'cjs',
+                format: 'iife',
+                platform: 'browser',
                 target: 'es6',
+                globalName: '__provider',
+                footer: {
+                    js: `\nif (typeof module !== 'undefined' && module.exports) {\n    module.exports = __provider;\n}\nif (__provider && __provider.getStreams) {\n    if (typeof globalThis !== 'undefined') {\n        globalThis.getStreams = __provider.getStreams;\n    }\n    if (typeof global !== 'undefined') {\n        global.getStreams = __provider.getStreams;\n    }\n    if (typeof self !== 'undefined') {\n        self.getStreams = __provider.getStreams;\n    }\n}`
+                }
             });
             
             console.log(`✅ Compiled: ${providerName}`);

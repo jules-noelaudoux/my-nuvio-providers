@@ -10,7 +10,7 @@ const CONFIG = {
     }
 };
 
-function getStreams(tmdbId, mediaType, season, episode) {
+export function getStreams(tmdbId, mediaType, season, episode) {
     return new Promise(function(resolve) {
         var apiUrl;
 

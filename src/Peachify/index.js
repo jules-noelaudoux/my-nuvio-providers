@@ -145,7 +145,7 @@ function getSourceScore(source, subtitles, mediaType) {
     return 1; // 4. Other/Fallback -> Priority 1
 }
 
-function getStreams(tmdbId, mediaType, season, episode) {
+export function getStreams(tmdbId, mediaType, season, episode) {
     return new Promise(function(resolve) {
         let apiPath = '';
         if (mediaType === 'movie') {
@@ -267,10 +267,3 @@ function getStreams(tmdbId, mediaType, season, episode) {
     });
 }
 
-if (typeof globalThis !== 'undefined') {
-    globalThis.getStreams = getStreams;
-} else if (typeof global !== 'undefined') {
-    global.getStreams = getStreams;
-} else if (typeof window !== 'undefined') {
-    window.getStreams = getStreams;
-}
