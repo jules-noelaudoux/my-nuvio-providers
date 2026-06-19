@@ -45,13 +45,13 @@ providers.forEach(providerName => {
                 name: providerName,
                 description: `Custom scraper for ${providerName}`,
                 version: "1.0.0",
-                author: "Custom",
+                author: "jules noel-audoux",
                 supportedTypes: ["movie", "tv"],
                 filename: outputFileName,
                 enabled: true,
                 formats: ["mp4", "m3u8"],
                 logo: "https://www.google.com/s2/favicons?domain=google.com&sz=128",
-                contentLanguage: ["en"]
+                contentLanguage: ["en", "fr"]
             });
         } catch (error) {
             console.error(`❌ Failed to compile ${providerName}:`, error);
