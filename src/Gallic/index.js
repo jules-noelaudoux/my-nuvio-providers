@@ -51,6 +51,4 @@ function getStreams(tmdbId, mediaType, season, episode) {
             resolve([]); 
         }
     });
-}
-
-export { getStreams };
+}

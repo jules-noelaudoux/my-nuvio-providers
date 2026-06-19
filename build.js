@@ -37,7 +37,7 @@ providers.forEach(providerName => {
             esbuild.buildSync({
                 entryPoints: [entryPoint],
                 outfile: outputPath,
-                bundle: true,
+                bundle: false,
                 minify: true,
                 format: 'cjs',
             });
