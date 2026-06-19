@@ -38,23 +38,27 @@ function getStreams(tmdbId, mediaType, season, episode) {
                 // Extract the stream URL from various possible response shapes
                 var streamUrl = null;
 
-                // Shape 1: { url: "..." }
-                if (data.url && typeof data.url === 'string') {
+                // Shape 1: { source: { stream_url: "..." } } (Standard Gallic API response format)
+                if (data.source && data.source.stream_url && typeof data.source.stream_url === 'string') {
+                    streamUrl = data.source.stream_url;
+                }
+                // Shape 2: { url: "..." }
+                else if (data.url && typeof data.url === 'string') {
                     streamUrl = data.url;
                 }
-                // Shape 2: { stream: "..." }
+                // Shape 3: { stream: "..." }
                 else if (data.stream && typeof data.stream === 'string') {
                     streamUrl = data.stream;
                 }
-                // Shape 3: { sources: [{ url: "..." }, ...] }
+                // Shape 4: { sources: [{ url: "..." }, ...] }
                 else if (Array.isArray(data.sources) && data.sources.length > 0) {
                     streamUrl = data.sources[0].url || data.sources[0];
                 }
-                // Shape 4: { data: { url: "..." } }
+                // Shape 5: { data: { url: "..." } }
                 else if (data.data && data.data.url) {
                     streamUrl = data.data.url;
                 }
-                // Shape 5: Plain string URL
+                // Shape 6: Plain string URL
                 else if (typeof data === 'string' && data.includes('m3u8')) {
                     streamUrl = data;
                 }
