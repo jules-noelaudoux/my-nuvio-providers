@@ -16,13 +16,9 @@ const providers = fs.readdirSync(srcDir).filter(file =>
 
 // 3. Base Manifest Template
 const manifest = {
-    id: "com.nuvio.custom.bundle",
     name: "My Custom Providers",
     version: "1.0.0",
-    description: "An automated bundle of custom Nuvio scrapers.",
-    types: ["movie", "series", "tv"],
-    catalogs: [],
-    providers: [] // Will be populated dynamically
+    scrapers: [] // Will be populated dynamically
 };
 
 // 4. Compile each provider
@@ -43,7 +39,19 @@ providers.forEach(providerName => {
             });
             
             console.log(`✅ Compiled: ${providerName}`);
-            manifest.providers.push(outputFileName); // Add to manifest
+            manifest.scrapers.push({
+                id: providerName.toLowerCase(),
+                name: providerName,
+                description: `Custom scraper for ${providerName}`,
+                version: "1.0.0",
+                author: "Custom",
+                supportedTypes: ["movie", "tv"],
+                filename: outputFileName,
+                enabled: true,
+                formats: ["mp4", "m3u8"],
+                logo: "https://www.google.com/s2/favicons?domain=google.com&sz=128",
+                contentLanguage: ["en"]
+            });
         } catch (error) {
             console.error(`❌ Failed to compile ${providerName}:`, error);
         }
